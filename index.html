@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PetCaixa — Gestão Financeira Pet</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#2D6A4F"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="PetCaixa"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png"/>
+
+<!-- SEO -->
+<meta name="description" content="Gerencie o fundo de emergência, vacinas, gastos e ração do seu pet de forma simples e completa."/>
+
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --verde: #2D6A4F;
+    --verde-claro: #52B788;
+    --dourado: #D4A843;
+    --creme: #F5F0E8;
+    --creme-escuro: #EAE2D0;
+    --marrom: #6B4F3A;
+    --texto: #1A1A1A;
+    --cinza: #8A8A8A;
+    --branco: #FFFFFF;
+    --erro: #C0392B;
+    --sombra: 0 4px 24px rgba(45,106,79,0.12);
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--creme);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--verde);
+    padding: 20px 24px 0;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0;
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--creme);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--dourado); }
+  .pet-selector-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: var(--creme);
+    border-radius: 24px;
+    padding: 6px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: background 0.2s;
+  }
+  .pet-selector-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* NAV TABS */
+  nav {
+    display: flex;
+    gap: 0;
+    margin-top: 16px;
+    border-bottom: none;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 4px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: rgba(245,240,232,0.55);
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .tab.active {
+    color: var(--dourado);
+    border-bottom-color: var(--dourado);
+  }
+  .tab-icon { font-size: 1.1rem; display: block; margin-bottom: 2px; }
+
+  /* MAIN */
+  main { padding: 20px 16px 100px; max-width: 480px; margin: 0 auto; }
+
+  /* CARDS */
+  .card {
+    background: var(--branco);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--sombra);
+  }
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--verde);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .icon { font-size: 1.2rem; }
+
+  /* HERO CARD - FUNDO */
+  .fundo-hero {
+    background: linear-gradient(135deg, var(--verde) 0%, #1B4332 100%);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 14px;
+    color: var(--creme);
+    position: relative;
+    overflow: hidden;
+  }
+  .fundo-hero::before {
+    content: '🐾';
+    position: absolute;
+    right: -10px; top: -10px;
+    font-size: 6rem;
+    opacity: 0.07;
+    transform: rotate(15deg);
+  }
+  .fundo-hero-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--verde-claro);
+    margin-bottom: 6px;
+  }
+  .fundo-hero-valor {
+    font-family: 'Fraunces', serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: var(--branco);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .fundo-hero-meta {
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.65);
+    margin-bottom: 18px;
+  }
+  .fundo-progress-bar {
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    height: 8px;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+  .fundo-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--verde-claro), var(--dourado));
+    border-radius: 8px;
+    transition: width 0.8s ease;
+  }
+  .fundo-progress-labels {
+    display: flex; justify-content: space-between;
+    font-size: 0.72rem;
+    color: rgba(245,240,232,0.55);
+  }
+  .fundo-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-top: 16px;
+  }
+  .fundo-stat {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .fundo-stat-label { font-size: 0.68rem; color: rgba(245,240,232,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
+  .fundo-stat-valor { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600; color: var(--dourado); margin-top: 2px; }
+
+  /* INPUTS */
+  .input-group { margin-bottom: 12px; }
+  .input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--cinza);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .input-group input, .input-group select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--creme-escuro);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--texto);
+    background: var(--creme);
+    transition: border 0.2s;
+    -webkit-appearance: none;
+  }
+  .input-group input:focus, .input-group select:focus {
+    outline: none;
+    border-color: var(--verde-claro);
+    background: var(--branco);
+  }
+  .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* BOTÕES */
+  .btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--verde);
+    color: var(--branco);
+  }
+  .btn-primary:hover { background: #1B4332; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--creme-escuro);
+    color: var(--marrom);
+    margin-top: 8px;
+  }
+  .btn-dourado {
+    background: var(--dourado);
+    color: var(--branco);
+  }
+  .btn-sm {
+    width: auto;
+    padding: 7px 14px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+  }
+
+  /* LISTA DE GASTOS */
+  .gasto-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--creme-escuro);
+  }
+  .gasto-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .gasto-emoji {
+    width: 38px; height: 38px;
+    background: var(--creme);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .gasto-info { flex: 1; }
+  .gasto-nome { font-size: 0.9rem; font-weight: 500; color: var(--texto); }
+  .gasto-cat { font-size: 0.73rem; color: var(--cinza); margin-top: 1px; }
+  .gasto-valor { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 600; color: var(--verde); }
+  .gasto-freq { font-size: 0.68rem; color: var(--cinza); text-align: right; margin-top: 2px; }
+  .gasto-del { background: none; border: none; color: #ddd; cursor: pointer; font-size: 1rem; padding: 4px; }
+  .gasto-del:hover { color: var(--erro); }
+
+  /* VACINAS */
+  .vacina-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--creme-escuro);
+  }
+  .vacina-item:last-child { border-bottom: none; }
+  .vacina-status {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-ok { background: var(--verde-claro); }
+  .status-alerta { background: var(--dourado); }
+  .status-vencida { background: var(--erro); }
+  .vacina-info { flex: 1; }
+  .vacina-nome { font-size: 0.9rem; font-weight: 500; }
+  .vacina-data { font-size: 0.73rem; color: var(--cinza); margin-top: 1px; }
+  .vacina-badge {
+    font-size: 0.68rem;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .badge-ok { background: #E8F5E9; color: var(--verde); }
+  .badge-alerta { background: #FFF8E1; color: #B8860B; }
+  .badge-vencida { background: #FDECEA; color: var(--erro); }
+
+  /* CALCULADORA RAÇÃO */
+  .racao-result {
+    background: linear-gradient(135deg, var(--verde) 0%, #1B4332 100%);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 14px;
+    color: var(--creme);
+    display: none;
+  }
+  .racao-result.visible { display: block; }
+  .racao-result-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--verde-claro); margin-bottom: 8px; }
+  .racao-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .racao-result-item { }
+  .racao-result-label { font-size: 0.7rem; color: rgba(245,240,232,0.6); }
+  .racao-result-valor { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 700; color: var(--dourado); }
+
+  /* PASSEIOS */
+  .passeio-card {
+    background: var(--creme);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--verde-claro);
+  }
+  .passeio-header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .passeio-nome { font-weight: 500; font-size: 0.92rem; }
+  .passeio-freq { font-size: 0.72rem; color: var(--cinza); background: var(--branco); padding: 3px 8px; border-radius: 20px; }
+  .passeio-custo { font-family: 'Fraunces', serif; font-size: 1rem; color: var(--verde); font-weight: 600; margin-top: 6px; }
+  .passeio-mensal { font-size: 0.73rem; color: var(--cinza); }
+
+  /* RESUMO MENSAL */
+  .resumo-categoria {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--creme-escuro);
+  }
+  .resumo-categoria:last-child { border-bottom: none; }
+  .resumo-cat-info { display: flex; align-items: center; gap: 10px; }
+  .resumo-cat-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .resumo-cat-nome { font-size: 0.88rem; }
+  .resumo-cat-valor { font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 600; color: var(--texto); }
+
+  /* TOTAL */
+  .total-box {
+    background: var(--creme-escuro);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 4px;
+  }
+  .total-label { font-size: 0.85rem; font-weight: 500; }
+  .total-valor { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900; color: var(--verde); }
+
+  /* EMPTY STATE */
+  .empty {
+    text-align: center;
+    padding: 28px 16px;
+    color: var(--cinza);
+  }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 8px; }
+  .empty-text { font-size: 0.85rem; }
+
+  /* BOTTOM NAV */
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--branco);
+    border-top: 1px solid var(--creme-escuro);
+    padding: 8px 0 16px;
+    display: flex;
+    z-index: 200;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  }
+  .bottom-tab {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 4px;
+    transition: all 0.2s;
+  }
+  .bottom-tab-icon { font-size: 1.3rem; }
+  .bottom-tab-label { font-size: 0.62rem; font-weight: 500; color: var(--cinza); text-transform: uppercase; letter-spacing: 0.3px; }
+  .bottom-tab.active .bottom-tab-label { color: var(--verde); }
+  .bottom-tab.active .bottom-tab-icon { transform: scale(1.15); }
+
+  /* SEÇÃO */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CHIP */
+  .chip {
+    display: inline-flex; align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin: 3px;
+    cursor: pointer;
+    border: 1.5px solid var(--creme-escuro);
+    background: var(--branco);
+    color: var(--cinza);
+    transition: all 0.15s;
+  }
+  .chip.selected {
+    background: var(--verde);
+    color: var(--branco);
+    border-color: var(--verde);
+  }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--creme-escuro); margin: 14px 0; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: var(--texto);
+    color: var(--branco);
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-size: 0.82rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 300;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* MODAL SETUP */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 400;
+    display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--branco);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 40px;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-handle { width: 36px; height: 4px; background: var(--creme-escuro); border-radius: 2px; margin: 0 auto 20px; }
+  .modal-title { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 700; color: var(--verde); margin-bottom: 18px; }
+
+  /* CUSTO EMERGÊNCIA */
+  .emergencia-list { }
+  .emergencia-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--creme-escuro);
+    font-size: 0.88rem;
+  }
+  .emergencia-item:last-child { border-bottom: none; }
+  .emergencia-nome { color: var(--texto); }
+  .emergencia-faixa { color: var(--marrom); font-family: 'Fraunces', serif; font-weight: 600; }
+
+  .tag { display: inline-block; font-size: 0.7rem; padding: 2px 7px; border-radius: 6px; margin-left: 6px; }
+  .tag-verde { background: #E8F5E9; color: var(--verde); }
+  .tag-dourado { background: #FFF8E1; color: #8B6914; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">Pet<span>Caixa</span></div>
+    <button class="pet-selector-btn" onclick="abrirSetup()">
+      🐾 <span id="nomePetBtn">Cadastrar pet</span> ▾
+    </button>
+  </div>
+  <nav>
+    <div class="tab active" onclick="irPara('fundo', this)">
+      <span class="tab-icon">💰</span>Fundo
+    </div>
+    <div class="tab" onclick="irPara('gastos', this)">
+      <span class="tab-icon">📋</span>Gastos
+    </div>
+    <div class="tab" onclick="irPara('vacinas', this)">
+      <span class="tab-icon">💉</span>Vacinas
+    </div>
+    <div class="tab" onclick="irPara('racao', this)">
+      <span class="tab-icon">🥣</span>Ração
+    </div>
+    <div class="tab" onclick="irPara('passeios', this)">
+      <span class="tab-icon">🦮</span>Passeios
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <!-- SEÇÃO FUNDO -->
+  <section class="section active" id="sec-fundo">
+    <div class="fundo-hero">
+      <div class="fundo-hero-label">Fundo de Emergência</div>
+      <div class="fundo-hero-valor" id="fundoAtual">R$ 0,00</div>
+      <div class="fundo-hero-meta" id="fundoMetaLabel">Meta: R$ 0,00 • 0 meses de custo</div>
+      <div class="fundo-progress-bar">
+        <div class="fundo-progress-fill" id="fundoProgress" style="width:0%"></div>
+      </div>
+      <div class="fundo-progress-labels">
+        <span>R$ 0</span>
+        <span id="fundoMetaMax">R$ 0</span>
+      </div>
+      <div class="fundo-stats">
+        <div class="fundo-stat">
+          <div class="fundo-stat-label">Custo mensal</div>
+          <div class="fundo-stat-valor" id="custoMensalHero">R$ 0</div>
+        </div>
+        <div class="fundo-stat">
+          <div class="fundo-stat-label">Faltam</div>
+          <div class="fundo-stat-valor" id="fundoFaltam">R$ 0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">💳</span> Atualizar Fundo</div>
+      <div class="input-group">
+        <label>Valor atual no fundo (R$)</label>
+        <input type="number" id="inputFundoAtual" placeholder="0,00" step="0.01" oninput="calcularFundo()"/>
+      </div>
+      <div class="input-group">
+        <label>Meses de reserva desejados</label>
+        <select id="inputMesesReserva" onchange="calcularFundo()">
+          <option value="3">3 meses (mínimo recomendado)</option>
+          <option value="6" selected>6 meses (ideal)</option>
+          <option value="12">12 meses (conservador)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🏥</span> Custos Médios de Emergência</div>
+      <div class="emergencia-list">
+        <div class="emergencia-item"><span class="emergencia-nome">Consulta veterinária</span><span class="emergencia-faixa">R$ 120–300</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Raio-X</span><span class="emergencia-faixa">R$ 180–400</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Ultrassom</span><span class="emergencia-faixa">R$ 250–600</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Tomografia</span><span class="emergencia-faixa">R$ 1.500–3.500</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Cirurgia de emergência</span><span class="emergencia-faixa">R$ 2.000–8.000</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Internação (por dia)</span><span class="emergencia-faixa">R$ 300–800</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Hemograma completo</span><span class="emergencia-faixa">R$ 150–350</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Dentição/Tartaro</span><span class="emergencia-faixa">R$ 400–900</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO GASTOS -->
+  <section class="section" id="sec-gastos">
+    <div class="card">
+      <div class="card-title"><span class="icon">➕</span> Adicionar Gasto</div>
+      <div class="input-group">
+        <label>Nome do gasto</label>
+        <input type="text" id="gastoNome" placeholder="Ex: Ração Premium"/>
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Valor (R$)</label>
+          <input type="number" id="gastoValor" placeholder="0,00" step="0.01"/>
+        </div>
+        <div class="input-group">
+          <label>Frequência</label>
+          <select id="gastoFreq">
+            <option value="mensal">Mensal</option>
+            <option value="quinzenal">Quinzenal</option>
+            <option value="semanal">Semanal</option>
+            <option value="anual">Anual</option>
+            <option value="unico">Único</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Categoria</label>
+        <div id="categoriaChips">
+          <span class="chip selected" data-cat="alimentação">🍖 Alimentação</span>
+          <span class="chip" data-cat="saúde">💊 Saúde</span>
+          <span class="chip" data-cat="higiene">🛁 Higiene</span>
+          <span class="chip" data-cat="lazer">🎾 Lazer</span>
+          <span class="chip" data-cat="serviços">✂️ Serviços</span>
+          <span class="chip" data-cat="outros">📦 Outros</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="adicionarGasto()">Adicionar</button>
+    </div>
+
+    <div class="card" id="cardListaGastos">
+      <div class="card-title"><span class="icon">📋</span> Gastos Cadastrados</div>
+      <div id="listaGastos"><div class="empty"><div class="empty-icon">🐾</div><div class="empty-text">Nenhum gasto cadastrado ainda</div></div></div>
+      <div class="divider"></div>
+      <div class="total-box">
+        <span class="total-label">💰 Total mensal estimado</span>
+        <span class="total-valor" id="totalMensal">R$ 0,00</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> Por Categoria</div>
+      <div id="resumoCategorias"><div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Adicione gastos para ver o resumo</div></div></div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO VACINAS -->
+  <section class="section" id="sec-vacinas">
+    <div class="card">
+      <div class="card-title"><span class="icon">💉</span> Registrar Vacina</div>
+      <div class="input-group">
+        <label>Nome da vacina</label>
+        <input type="text" id="vacinaNome" placeholder="Ex: V10, Antirrábica"/>
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Data de aplicação</label>
+          <input type="date" id="vacinaData"/>
+        </div>
+        <div class="input-group">
+          <label>Validade (meses)</label>
+          <select id="vacinaValidade">
+            <option value="6">6 meses</option>
+            <option value="12" selected>12 meses</option>
+            <option value="24">24 meses</option>
+            <option value="36">36 meses</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Custo (R$)</label>
+          <input type="number" id="vacinaCusto" placeholder="0,00" step="0.01"/>
+        </div>
+        <div class="input-group">
+          <label>Clínica/Veterinário</label>
+          <input type="text" id="vacinaClinica" placeholder="Nome da clínica"/>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="adicionarVacina()">Registrar</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📅</span> Calendário Vacinal</div>
+      <div id="listaVacinas"><div class="empty"><div class="empty-icon">💉</div><div class="empty-text">Nenhuma vacina registrada</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📖</span> Vacinas Recomendadas</div>
+      <div class="emergencia-list">
+        <div class="emergencia-item"><span class="emergencia-nome">V8/V10 (polivalente) <span class="tag tag-verde">Cão</span></span><span class="emergencia-faixa">Anual</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Antirrábica <span class="tag tag-verde">Cão/Gato</span></span><span class="emergencia-faixa">Anual</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Gripe canina <span class="tag tag-verde">Cão</span></span><span class="emergencia-faixa">Anual</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Tríplice Felina (V3) <span class="tag tag-dourado">Gato</span></span><span class="emergencia-faixa">Anual</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Leucemia Felina <span class="tag tag-dourado">Gato</span></span><span class="emergencia-faixa">Anual</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Giárdia <span class="tag tag-verde">Cão</span></span><span class="emergencia-faixa">6 meses</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO RAÇÃO -->
+  <section class="section" id="sec-racao">
+    <div class="card">
+      <div class="card-title"><span class="icon">🥣</span> Calculadora de Ração</div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Espécie</label>
+          <select id="racaoEspecie" onchange="atualizarRacas()">
+            <option value="cao">Cão</option>
+            <option value="gato">Gato</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Porte/Raça</label>
+          <select id="racaoPorte">
+            <option value="mini">Mini (até 5kg)</option>
+            <option value="pequeno">Pequeno (5–10kg)</option>
+            <option value="medio" selected>Médio (10–25kg)</option>
+            <option value="grande">Grande (25–45kg)</option>
+            <option value="gigante">Gigante (+45kg)</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Peso atual (kg)</label>
+          <input type="number" id="racaoPeso" placeholder="Ex: 12" step="0.1"/>
+        </div>
+        <div class="input-group">
+          <label>Fase de vida</label>
+          <select id="racaoFase">
+            <option value="filhote">Filhote</option>
+            <option value="adulto" selected>Adulto</option>
+            <option value="senior">Sênior (+7 anos)</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Nível de atividade</label>
+          <select id="racaoAtividade">
+            <option value="baixo">Baixo (sedentário)</option>
+            <option value="moderado" selected>Moderado</option>
+            <option value="alto">Alto (muito ativo)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Preço por kg da ração (R$)</label>
+          <input type="number" id="racaoPreco" placeholder="Ex: 35,00" step="0.01"/>
+        </div>
+      </div>
+      <button class="btn btn-dourado" onclick="calcularRacao()">Calcular</button>
+
+      <div class="racao-result" id="racaoResult">
+        <div class="racao-result-title">📊 Resultado do Cálculo</div>
+        <div class="racao-result-grid">
+          <div class="racao-result-item">
+            <div class="racao-result-label">Por dia</div>
+            <div class="racao-result-valor" id="racaoDia">—</div>
+          </div>
+          <div class="racao-result-item">
+            <div class="racao-result-label">Por mês</div>
+            <div class="racao-result-valor" id="racaoMes">—</div>
+          </div>
+          <div class="racao-result-item">
+            <div class="racao-result-label">Custo/mês</div>
+            <div class="racao-result-valor" id="racaoCusto">—</div>
+          </div>
+          <div class="racao-result-item">
+            <div class="racao-result-label">Custo/ano</div>
+            <div class="racao-result-valor" id="racaoAno">—</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:0.72rem; color:rgba(245,240,232,0.55);">⚠️ Valores de referência. Consulte seu veterinário para ajuste preciso.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📐</span> Referência por Porte (Cão adulto/moderado)</div>
+      <div class="emergencia-list">
+        <div class="emergencia-item"><span class="emergencia-nome">Mini (até 5kg)</span><span class="emergencia-faixa">80–150g/dia</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Pequeno (5–10kg)</span><span class="emergencia-faixa">150–250g/dia</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Médio (10–25kg)</span><span class="emergencia-faixa">250–450g/dia</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Grande (25–45kg)</span><span class="emergencia-faixa">450–700g/dia</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Gigante (+45kg)</span><span class="emergencia-faixa">700–1.200g/dia</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO PASSEIOS -->
+  <section class="section" id="sec-passeios">
+    <div class="card">
+      <div class="card-title"><span class="icon">🦮</span> Registrar Passeio/Atividade</div>
+      <div class="input-group">
+        <label>Tipo de atividade</label>
+        <input type="text" id="passeioNome" placeholder="Ex: Dog walker, Parque, Natação"/>
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Custo por vez (R$)</label>
+          <input type="number" id="passeioCusto" placeholder="0,00" step="0.01"/>
+        </div>
+        <div class="input-group">
+          <label>Frequência</label>
+          <select id="passeioFreq">
+            <option value="7">Diária</option>
+            <option value="3">3x por semana</option>
+            <option value="2">2x por semana</option>
+            <option value="1" selected>1x por semana</option>
+            <option value="0.5">Quinzenal</option>
+            <option value="0.25">Mensal</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Responsável</label>
+        <input type="text" id="passeioResp" placeholder="Ex: Dog walker João, Eu mesmo"/>
+      </div>
+      <button class="btn btn-primary" onclick="adicionarPasseio()">Registrar</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📍</span> Atividades Registradas</div>
+      <div id="listaPasseios"><div class="empty"><div class="empty-icon">🦮</div><div class="empty-text">Nenhuma atividade registrada</div></div></div>
+      <div class="divider"></div>
+      <div class="total-box">
+        <span class="total-label">🐕 Custo mensal</span>
+        <span class="total-valor" id="totalPasseios">R$ 0,00</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">💡</span> Necessidade por Porte</div>
+      <div class="emergencia-list">
+        <div class="emergencia-item"><span class="emergencia-nome">Mini/Pequeno</span><span class="emergencia-faixa">20–30 min/dia</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Médio</span><span class="emergencia-faixa">30–60 min/dia</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Grande/Gigante</span><span class="emergencia-faixa">60–120 min/dia</span></div>
+        <div class="emergencia-item"><span class="emergencia-nome">Gatos</span><span class="emergencia-faixa">Brinquedo 15–30 min/dia</span></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <div class="bottom-tab active" onclick="irPara('fundo', null, this)">
+    <span class="bottom-tab-icon">💰</span>
+    <span class="bottom-tab-label">Fundo</span>
+  </div>
+  <div class="bottom-tab" onclick="irPara('gastos', null, this)">
+    <span class="bottom-tab-icon">📋</span>
+    <span class="bottom-tab-label">Gastos</span>
+  </div>
+  <div class="bottom-tab" onclick="irPara('vacinas', null, this)">
+    <span class="bottom-tab-icon">💉</span>
+    <span class="bottom-tab-label">Vacinas</span>
+  </div>
+  <div class="bottom-tab" onclick="irPara('racao', null, this)">
+    <span class="bottom-tab-icon">🥣</span>
+    <span class="bottom-tab-label">Ração</span>
+  </div>
+  <div class="bottom-tab" onclick="irPara('passeios', null, this)">
+    <span class="bottom-tab-icon">🦮</span>
+    <span class="bottom-tab-label">Passeios</span>
+  </div>
+</div>
+
+<!-- MODAL SETUP PET -->
+<div class="modal-overlay" id="modalSetup">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🐾 Dados do Seu Pet</div>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Nome do pet</label>
+        <input type="text" id="setupNome" placeholder="Ex: Thor, Luna"/>
+      </div>
+      <div class="input-group">
+        <label>Espécie</label>
+        <select id="setupEspecie">
+          <option value="Cão">🐶 Cão</option>
+          <option value="Gato">🐱 Gato</option>
+          <option value="Outro">🐰 Outro</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Raça</label>
+        <input type="text" id="setupRaca" placeholder="Ex: Labrador"/>
+      </div>
+      <div class="input-group">
+        <label>Peso (kg)</label>
+        <input type="number" id="setupPeso" placeholder="0,0" step="0.1"/>
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Idade</label>
+        <input type="text" id="setupIdade" placeholder="Ex: 3 anos"/>
+      </div>
+      <div class="input-group">
+        <label>Sexo</label>
+        <select id="setupSexo">
+          <option value="Macho">♂ Macho</option>
+          <option value="Fêmea">♀ Fêmea</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="salvarPet()">Salvar</button>
+    <button class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── STATE ──
+  let state = {
+    pet: null,
+    fundoAtual: 0,
+    mesesReserva: 6,
+    gastos: [],
+    vacinas: [],
+    passeios: [],
+    catSelecionada: 'alimentação'
+  };
+
+  // ── CHIPS CATEGORIA ──
+  document.querySelectorAll('#categoriaChips .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#categoriaChips .chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      state.catSelecionada = chip.dataset.cat;
+    });
+  });
+
+  // ── NAVEGAÇÃO ──
+  function irPara(id, tabEl, bottomEl) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-' + id).classList.add('active');
+    if (tabEl) {
+      document.querySelectorAll('nav .tab').forEach(t => t.classList.remove('active'));
+      tabEl.classList.add('active');
+    }
+    if (bottomEl) {
+      document.querySelectorAll('.bottom-tab').forEach(t => t.classList.remove('active'));
+      bottomEl.classList.add('active');
+    }
+    // sync nav e bottom
+    const navTabs = document.querySelectorAll('nav .tab');
+    const bottomTabs = document.querySelectorAll('.bottom-tab');
+    const ordem = ['fundo','gastos','vacinas','racao','passeios'];
+    const idx = ordem.indexOf(id);
+    navTabs.forEach((t,i) => t.classList.toggle('active', i===idx));
+    bottomTabs.forEach((t,i) => t.classList.toggle('active', i===idx));
+  }
+
+  // ── MODAL ──
+  function abrirSetup() {
+    document.getElementById('modalSetup').classList.add('open');
+    if (state.pet) {
+      document.getElementById('setupNome').value = state.pet.nome || '';
+      document.getElementById('setupEspecie').value = state.pet.especie || 'Cão';
+      document.getElementById('setupRaca').value = state.pet.raca || '';
+      document.getElementById('setupPeso').value = state.pet.peso || '';
+      document.getElementById('setupIdade').value = state.pet.idade || '';
+      document.getElementById('setupSexo').value = state.pet.sexo || 'Macho';
+    }
+  }
+  function fecharModal() {
+    document.getElementById('modalSetup').classList.remove('open');
+  }
+  document.getElementById('modalSetup').addEventListener('click', function(e) {
+    if (e.target === this) fecharModal();
+  });
+
+  function salvarPet() {
+    const nome = document.getElementById('setupNome').value.trim();
+    if (!nome) { toast('Digite o nome do pet'); return; }
+    state.pet = {
+      nome,
+      especie: document.getElementById('setupEspecie').value,
+      raca: document.getElementById('setupRaca').value,
+      peso: document.getElementById('setupPeso').value,
+      idade: document.getElementById('setupIdade').value,
+      sexo: document.getElementById('setupSexo').value
+    };
+    document.getElementById('nomePetBtn').textContent = nome;
+    fecharModal();
+    toast('✅ Pet salvo com sucesso!');
+  }
+
+  // ── FUNDO ──
+  function calcularFundo() {
+    state.fundoAtual = parseFloat(document.getElementById('inputFundoAtual').value) || 0;
+    state.mesesReserva = parseInt(document.getElementById('inputMesesReserva').value);
+    atualizarFundo();
+  }
+
+  function atualizarFundo() {
+    const custoMensal = calcularTotalMensal();
+    const meta = custoMensal * state.mesesReserva;
+    const atual = state.fundoAtual;
+    const progresso = meta > 0 ? Math.min((atual / meta) * 100, 100) : 0;
+    const faltam = Math.max(meta - atual, 0);
+
+    document.getElementById('fundoAtual').textContent = fmt(atual);
+    document.getElementById('fundoMetaLabel').textContent = `Meta: ${fmt(meta)} • ${state.mesesReserva} meses de custo`;
+    document.getElementById('fundoMetaMax').textContent = fmt(meta);
+    document.getElementById('fundoProgress').style.width = progresso + '%';
+    document.getElementById('custoMensalHero').textContent = fmt(custoMensal);
+    document.getElementById('fundoFaltam').textContent = fmt(faltam);
+  }
+
+  // ── GASTOS ──
+  const catEmoji = { 'alimentação':'🍖', 'saúde':'💊', 'higiene':'🛁', 'lazer':'🎾', 'serviços':'✂️', 'outros':'📦' };
+  const catCor = { 'alimentação':'#52B788', 'saúde':'#E74C3C', 'higiene':'#3498DB', 'lazer':'#F39C12', 'serviços':'#9B59B6', 'outros':'#95A5A6' };
+
+  const freqMult = { 'semanal': 4.33, 'quinzenal': 2, 'mensal': 1, 'anual': 1/12, 'unico': 0 };
+
+  function adicionarGasto() {
+    const nome = document.getElementById('gastoNome').value.trim();
+    const valor = parseFloat(document.getElementById('gastoValor').value);
+    const freq = document.getElementById('gastoFreq').value;
+    if (!nome || isNaN(valor) || valor <= 0) { toast('Preencha nome e valor'); return; }
+    state.gastos.push({ id: Date.now(), nome, valor, freq, cat: state.catSelecionada });
+    document.getElementById('gastoNome').value = '';
+    document.getElementById('gastoValor').value = '';
+    renderGastos();
+    atualizarFundo();
+    toast('✅ Gasto adicionado!');
+  }
+
+  function removerGasto(id) {
+    state.gastos = state.gastos.filter(g => g.id !== id);
+    renderGastos();
+    atualizarFundo();
+  }
+
+  function calcularTotalMensal() {
+    return state.gastos.reduce((acc, g) => acc + g.valor * (freqMult[g.freq] || 0), 0)
+         + state.passeios.reduce((acc, p) => acc + p.custoMensal, 0);
+  }
+
+  function renderGastos() {
+    const lista = document.getElementById('listaGastos');
+    if (state.gastos.length === 0) {
+      lista.innerHTML = '<div class="empty"><div class="empty-icon">🐾</div><div class="empty-text">Nenhum gasto cadastrado ainda</div></div>';
+      document.getElementById('totalMensal').textContent = 'R$ 0,00';
+      document.getElementById('resumoCategorias').innerHTML = '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Adicione gastos para ver o resumo</div></div>';
+      return;
+    }
+    lista.innerHTML = state.gastos.map(g => `
+      <div class="gasto-item">
+        <div class="gasto-emoji">${catEmoji[g.cat]||'📦'}</div>
+        <div class="gasto-info">
+          <div class="gasto-nome">${g.nome}</div>
+          <div class="gasto-cat">${g.cat} · ${g.freq}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="gasto-valor">${fmt(g.valor)}</div>
+          <div class="gasto-freq">${fmtFreq(g.freq)}</div>
+        </div>
+        <button class="gasto-del" onclick="removerGasto(${g.id})">🗑</button>
+      </div>
+    `).join('');
+
+    const total = calcularTotalMensal();
+    document.getElementById('totalMensal').textContent = fmt(total);
+
+    // Categorias
+    const cats = {};
+    state.gastos.forEach(g => {
+      const men = g.valor * (freqMult[g.freq] || 0);
+      cats[g.cat] = (cats[g.cat] || 0) + men;
+    });
+    const resumo = document.getElementById('resumoCategorias');
+    resumo.innerHTML = Object.entries(cats).map(([cat, val]) => `
+      <div class="resumo-categoria">
+        <div class="resumo-cat-info">
+          <div class="resumo-cat-dot" style="background:${catCor[cat]||'#ccc'}"></div>
+          <span class="resumo-cat-nome">${catEmoji[cat]||''} ${cat.charAt(0).toUpperCase()+cat.slice(1)}</span>
+        </div>
+        <span class="resumo-cat-valor">${fmt(val)}/mês</span>
+      </div>
+    `).join('');
+  }
+
+  function fmtFreq(f) {
+    const map = { 'mensal':'por mês','semanal':'por semana','quinzenal':'a cada 15 dias','anual':'por ano','unico':'gasto único' };
+    return map[f] || f;
+  }
+
+  // ── VACINAS ──
+  function adicionarVacina() {
+    const nome = document.getElementById('vacinaNome').value.trim();
+    const data = document.getElementById('vacinaData').value;
+    if (!nome || !data) { toast('Nome e data são obrigatórios'); return; }
+    const meses = parseInt(document.getElementById('vacinaValidade').value);
+    const custo = parseFloat(document.getElementById('vacinaCusto').value) || 0;
+    const clinica = document.getElementById('vacinaClinica').value.trim();
+    const dataObj = new Date(data + 'T12:00:00');
+    const vencimento = new Date(dataObj);
+    vencimento.setMonth(vencimento.getMonth() + meses);
+    state.vacinas.push({ id: Date.now(), nome, data: dataObj, vencimento, custo, clinica });
+    document.getElementById('vacinaNome').value = '';
+    document.getElementById('vacinaData').value = '';
+    document.getElementById('vacinaCusto').value = '';
+    document.getElementById('vacinaClinica').value = '';
+    renderVacinas();
+    toast('✅ Vacina registrada!');
+  }
+
+  function removerVacina(id) {
+    state.vacinas = state.vacinas.filter(v => v.id !== id);
+    renderVacinas();
+  }
+
+  function renderVacinas() {
+    const lista = document.getElementById('listaVacinas');
+    if (state.vacinas.length === 0) {
+      lista.innerHTML = '<div class="empty"><div class="empty-icon">💉</div><div class="empty-text">Nenhuma vacina registrada</div></div>';
+      return;
+    }
+    const hoje = new Date();
+    lista.innerHTML = state.vacinas.map(v => {
+      const diasRestantes = Math.floor((v.vencimento - hoje) / (1000*60*60*24));
+      let status, badge, dotClass;
+      if (diasRestantes < 0) { status='vencida'; badge='Vencida'; dotClass='status-vencida'; }
+      else if (diasRestantes <= 30) { status='alerta'; badge=`Vence em ${diasRestantes}d`; dotClass='status-alerta'; }
+      else { status='ok'; badge='Em dia'; dotClass='status-ok'; }
+      return `
+        <div class="vacina-item">
+          <div class="vacina-status ${dotClass}"></div>
+          <div class="vacina-info">
+            <div class="vacina-nome">${v.nome}${v.clinica ? ` <span style="font-size:0.72rem;color:var(--cinza)">· ${v.clinica}</span>` : ''}</div>
+            <div class="vacina-data">Aplicada: ${fmtData(v.data)} · Vence: ${fmtData(v.vencimento)}${v.custo ? ` · ${fmt(v.custo)}` : ''}</div>
+          </div>
+          <span class="vacina-badge badge-${status}">${badge}</span>
+          <button class="gasto-del" onclick="removerVacina(${v.id})">🗑</button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── RAÇÃO ──
+  // Tabela: [mini, pequeno, médio, grande, gigante] em g/dia
+  const racaoBase = {
+    cao: {
+      filhote: { baixo:[60,130,210,380,620], moderado:[80,160,250,450,720], alto:[100,190,300,530,850] },
+      adulto:  { baixo:[70,150,230,420,680], moderado:[90,180,270,480,760], alto:[110,210,320,560,900] },
+      senior:  { baixo:[60,130,200,360,580], moderado:[75,155,230,410,660], alto:[90,175,260,450,730] }
+    },
+    gato: {
+      filhote: { baixo:[40,55,70,85,100], moderado:[50,65,80,95,115], alto:[60,75,92,110,130] },
+      adulto:  { baixo:[35,48,60,74,90],  moderado:[45,58,72,88,105], alto:[55,68,84,100,120] },
+      senior:  { baixo:[30,42,55,68,82],  moderado:[38,50,64,78,94],  alto:[46,58,72,86,104] }
+    }
+  };
+  const porteIdx = { mini:0, pequeno:1, medio:2, grande:3, gigante:4 };
+
+  function calcularRacao() {
+    const especie = document.getElementById('racaoEspecie').value;
+    const porte = document.getElementById('racaoPorte').value;
+    const peso = parseFloat(document.getElementById('racaoPeso').value);
+    const fase = document.getElementById('racaoFase').value;
+    const atividade = document.getElementById('racaoAtividade').value;
+    const preco = parseFloat(document.getElementById('racaoPreco').value);
+
+    const tabela = racaoBase[especie][fase][atividade];
+    let gDia = tabela[porteIdx[porte]];
+
+    // Ajuste fino pelo peso real
+    if (!isNaN(peso) && peso > 0) {
+      const fator = especie === 'cao' ? 0.02 : 0.04;
+      gDia = Math.round(peso * 1000 * fator);
+      // clamp por porte
+      const min = tabela[porteIdx[porte]] * 0.7;
+      const max = tabela[porteIdx[porte]] * 1.3;
+      gDia = Math.max(min, Math.min(max, gDia));
+    }
+
+    const gMes = gDia * 30;
+    const kgMes = gMes / 1000;
+    const custoMes = !isNaN(preco) && preco > 0 ? kgMes * preco : null;
+
+    document.getElementById('racaoDia').textContent = Math.round(gDia) + 'g';
+    document.getElementById('racaoMes').textContent = (gMes/1000).toFixed(1) + 'kg';
+    document.getElementById('racaoCusto').textContent = custoMes ? fmt(custoMes) : '—';
+    document.getElementById('racaoAno').textContent = custoMes ? fmt(custoMes * 12) : '—';
+    document.getElementById('racaoResult').classList.add('visible');
+  }
+
+  // ── PASSEIOS ──
+  function adicionarPasseio() {
+    const nome = document.getElementById('passeioNome').value.trim();
+    const custo = parseFloat(document.getElementById('passeioCusto').value) || 0;
+    const freqSem = parseFloat(document.getElementById('passeioFreq').value);
+    const resp = document.getElementById('passeioResp').value.trim();
+    if (!nome) { toast('Digite o nome da atividade'); return; }
+    const custoMensal = custo * freqSem * 4.33;
+    const freqLabel = { '7':'Diária','3':'3x/semana','2':'2x/semana','1':'1x/semana','0.5':'Quinzenal','0.25':'Mensal' };
+    state.passeios.push({ id: Date.now(), nome, custo, freqSem, freqLabel: freqLabel[String(freqSem)], resp, custoMensal });
+    document.getElementById('passeioNome').value = '';
+    document.getElementById('passeioCusto').value = '';
+    document.getElementById('passeioResp').value = '';
+    renderPasseios();
+    atualizarFundo();
+    toast('✅ Atividade registrada!');
+  }
+
+  function removerPasseio(id) {
+    state.passeios = state.passeios.filter(p => p.id !== id);
+    renderPasseios();
+    atualizarFundo();
+  }
+
+  function renderPasseios() {
+    const lista = document.getElementById('listaPasseios');
+    if (state.passeios.length === 0) {
+      lista.innerHTML = '<div class="empty"><div class="empty-icon">🦮</div><div class="empty-text">Nenhuma atividade registrada</div></div>';
+      document.getElementById('totalPasseios').textContent = 'R$ 0,00';
+      return;
+    }
+    lista.innerHTML = state.passeios.map(p => `
+      <div class="passeio-card">
+        <div class="passeio-header">
+          <div>
+            <div class="passeio-nome">${p.nome}${p.resp ? ` <span style="font-size:0.72rem;color:var(--cinza)">· ${p.resp}</span>` : ''}</div>
+            <div class="passeio-custo">${fmt(p.custo)}/vez <span class="passeio-mensal">→ ${fmt(p.custoMensal)}/mês</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="passeio-freq">${p.freqLabel}</span>
+            <button class="gasto-del" onclick="removerPasseio(${p.id})">🗑</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const total = state.passeios.reduce((acc, p) => acc + p.custoMensal, 0);
+    document.getElementById('totalPasseios').textContent = fmt(total);
+  }
+
+  // ── UTILS ──
+  function fmt(v) {
+    return 'R$ ' + (v||0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtData(d) {
+    return d.toLocaleDateString('pt-BR');
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+  }
+
+  // ── PERSISTÊNCIA LOCAL ──
+  function salvarStorage() {
+    try {
+      localStorage.setItem('petcaixa_state', JSON.stringify({
+        pet: state.pet,
+        fundoAtual: state.fundoAtual,
+        mesesReserva: state.mesesReserva,
+        gastos: state.gastos,
+        vacinas: state.vacinas.map(v => ({ ...v, data: v.data.toISOString(), vencimento: v.vencimento.toISOString() })),
+        passeios: state.passeios
+      }));
+    } catch(e) {}
+  }
+
+  function carregarStorage() {
+    try {
+      const raw = localStorage.getItem('petcaixa_state');
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (saved.pet) {
+        state.pet = saved.pet;
+        document.getElementById('nomePetBtn').textContent = saved.pet.nome;
+      }
+      state.fundoAtual = saved.fundoAtual || 0;
+      state.mesesReserva = saved.mesesReserva || 6;
+      state.gastos = saved.gastos || [];
+      state.vacinas = (saved.vacinas || []).map(v => ({ ...v, data: new Date(v.data), vencimento: new Date(v.vencimento) }));
+      state.passeios = saved.passeios || [];
+      if (state.fundoAtual) document.getElementById('inputFundoAtual').value = state.fundoAtual;
+      document.getElementById('inputMesesReserva').value = state.mesesReserva;
+      renderGastos(); renderVacinas(); renderPasseios();
+    } catch(e) {}
+  }
+
+  // Auto-save em todas as ações
+  const _orig = { adicionarGasto, removerGasto, adicionarVacina, removerVacina, adicionarPasseio, removerPasseio, salvarPet };
+  window.adicionarGasto  = () => { _orig.adicionarGasto();      salvarStorage(); };
+  window.removerGasto    = id => { _orig.removerGasto(id);      salvarStorage(); };
+  window.adicionarVacina = () => { _orig.adicionarVacina();     salvarStorage(); };
+  window.removerVacina   = id => { _orig.removerVacina(id);     salvarStorage(); };
+  window.adicionarPasseio= () => { _orig.adicionarPasseio();    salvarStorage(); };
+  window.removerPasseio  = id => { _orig.removerPasseio(id);    salvarStorage(); };
+  window.salvarPet       = () => { _orig.salvarPet();           salvarStorage(); };
+
+  document.getElementById('inputFundoAtual').addEventListener('input',  () => { calcularFundo(); salvarStorage(); });
+  document.getElementById('inputMesesReserva').addEventListener('change',() => { calcularFundo(); salvarStorage(); });
+
+  // ── BANNER INSTALAR PWA ──
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); deferredPrompt = e;
+    setTimeout(() => {
+      if (!deferredPrompt) return;
+      const banner = document.createElement('div');
+      banner.id = 'install-banner';
+      banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:500;background:var(--dourado);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;font-family:DM Sans,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.2)';
+      banner.innerHTML = '<span>📲 Instale o PetCaixa no seu celular!</span><div style="display:flex;gap:8px"><button onclick="instalarPWA()" style="background:#fff;color:var(--dourado);border:none;padding:6px 12px;border-radius:8px;font-weight:600;cursor:pointer">Instalar</button><button onclick="this.parentElement.parentElement.remove()" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);padding:6px 10px;border-radius:8px;cursor:pointer">✕</button></div>';
+      document.body.prepend(banner);
+    }, 3000);
+  });
+  window.instalarPWA = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('install-banner')?.remove();
+    if (outcome === 'accepted') toast('✅ PetCaixa instalado!');
+  };
+
+  // ── SERVICE WORKER ──
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(r => console.log('[PetCaixa] SW:', r.scope))
+        .catch(e => console.warn('[PetCaixa] SW erro:', e));
+    });
+  }
+
+  // ── INIT ──
+  carregarStorage();
+  atualizarFundo();
+</script>
+</body>
+</html>
