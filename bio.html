@@ -21,198 +21,34 @@
       flex-direction: column;
       align-items: center;
     }
-
-    .header {
-      text-align: center;
-      margin-bottom: 28px;
-      max-width: 480px;
-    }
-    .logo {
-      font-size: 3.5rem;
-      margin-bottom: 8px;
-      animation: bounce 2s infinite;
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-    h1 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.8rem;
-      color: var(--verde);
-      margin-bottom: 4px;
-    }
-    .tagline {
-      color: var(--cinza);
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .cta-container {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-    .btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 20px;
-      border-radius: 16px;
-      font-weight: 600;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      text-align: left;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(45,106,79,0.2);
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--verde), #1B4332);
-      color: white;
-    }
-    .btn-secondary {
-      background: white;
-      color: var(--verde);
-      border: 2px solid var(--verde2);
-    }
-    .btn-gold {
-      background: linear-gradient(135deg, var(--dourado), #B8962E);
-      color: white;
-    }
-    .btn-icon {
-      font-size: 1.4rem;
-    }
-    .btn-badge {
-      margin-left: auto;
-      background: rgba(255,255,255,0.2);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
-    .btn-secondary .btn-badge {
-      background: var(--bg);
-      color: var(--verde);
-    }
-
-    .ebook-card {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: 0 4px 20px rgba(45,106,79,0.1);
-      margin-bottom: 24px;
-      border-left: 4px solid var(--dourado);
-    }
-    .ebook-card h3 {
-      font-family: 'Fraunces', serif;
-      color: var(--verde);
-      margin-bottom: 8px;
-      font-size: 1.2rem;
-    }
-    .ebook-card p {
-      font-size: 0.9rem;
-      color: var(--cinza);
-      margin-bottom: 16px;
-      line-height: 1.6;
-    }
-    .ebook-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .ebook-form input {
-      padding: 12px 16px;
-      border: 1.5px solid #d0e8dc;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-family: 'DM Sans', sans-serif;
-    }
-    .ebook-form input:focus {
-      outline: none;
-      border-color: var(--verde2);
-    }
-    .form-note {
-      font-size: 0.75rem;
-      color: var(--cinza);
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    .features {
-      max-width: 480px;
-      width: 100%;
-      margin-bottom: 32px;
-    }
-    .feature-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px dashed #eee;
-    }
+    .header { text-align: center; margin-bottom: 28px; max-width: 480px; }
+    .logo { font-size: 3.5rem; margin-bottom: 8px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    h1 { font-family: 'Fraunces', serif; font-size: 1.8rem; color: var(--verde); margin-bottom: 4px; }
+    .tagline { color: var(--cinza); font-size: 0.95rem; line-height: 1.5; }
+    .cta-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+    .btn { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 16px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; text-align: left; border: none; cursor: pointer; width: 100%; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(45,106,79,0.2); }
+    .btn-primary { background: linear-gradient(135deg, var(--verde), #1B4332); color: white; }
+    .btn-secondary { background: white; color: var(--verde); border: 2px solid var(--verde2); }
+    .btn-gold { background: linear-gradient(135deg, var(--dourado), #B8962E); color: white; }
+    .btn-icon { font-size: 1.4rem; }
+    .btn-badge { margin-left: auto; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+    .btn-secondary .btn-badge { background: var(--bg); color: var(--verde); }
+    .ebook-card { background: white; border-radius: 20px; padding: 20px; max-width: 480px; width: 100%; box-shadow: 0 4px 20px rgba(45,106,79,0.1); margin-bottom: 24px; border-left: 4px solid var(--dourado); }
+    .ebook-card h3 { font-family: 'Fraunces', serif; color: var(--verde); margin-bottom: 8px; font-size: 1.2rem; }
+    .ebook-card p { font-size: 0.9rem; color: var(--cinza); margin-bottom: 16px; line-height: 1.6; }
+    .features { max-width: 480px; width: 100%; margin-bottom: 32px; }
+    .feature-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; border-bottom: 1px dashed #eee; }
     .feature-item:last-child { border-bottom: none; }
     .feature-icon { font-size: 1.3rem; }
     .feature-text { font-size: 0.9rem; line-height: 1.5; }
-
-    .social-links {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .social-link {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      text-decoration: none;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-      transition: transform 0.2s;
-    }
+    .social-links { display: flex; gap: 12px; margin-bottom: 24px; }
+    .social-link { width: 48px; height: 48px; border-radius: 14px; background: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 3px 12px rgba(0,0,0,0.08); transition: transform 0.2s; }
     .social-link:hover { transform: translateY(-3px); }
-
-    .footer {
-      text-align: center;
-      color: var(--cinza);
-      font-size: 0.8rem;
-      margin-top: auto;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
-      width: 100%;
-      max-width: 480px;
-    }
+    .footer { text-align: center; color: var(--cinza); font-size: 0.8rem; margin-top: auto; padding-top: 20px; border-top: 1px solid #eee; width: 100%; max-width: 480px; }
     .footer a { color: var(--verde); text-decoration: none; }
-
-    .hidden { display: none !important; }
-    .success-msg {
-      background: #e8f5e9;
-      color: #1b5e20;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-bottom: 16px;
-      display: none;
-    }
-
-    @media (max-width: 360px) {
-      h1 { font-size: 1.5rem; }
-      .btn { padding: 14px 16px; font-size: 0.95rem; }
-    }
+    @media (max-width: 360px) { h1 { font-size: 1.5rem; } .btn { padding: 14px 16px; font-size: 0.95rem; } }
   </style>
 </head>
 <body>
@@ -223,23 +59,21 @@
     <p class="tagline">Educação financeira para tutores que amam seus pets como família</p>
   </div>
 
-  <div id="success-msg" class="success-msg">
-    ✅ Ebook enviado! Verifique seu e-mail (e a caixa de spam).
-  </div>
-
   <div class="cta-container">
     
-    <button class="btn btn-secondary" onclick="scrollToEbook()">
+    <!-- BOTÃO DO EBOOK GRATUITO -->
+    <a href="Guia-PetCaixa-5-Gastos.pdf" class="btn btn-secondary" target="_blank" download>
       <span class="btn-icon">📘</span>
       <span>
         <strong>Guia Gratuito</strong><br>
         <small style="font-weight:400;color:var(--cinza)">5 Gastos que Todo Tutor Esquece</small>
       </span>
-      <span class="btn-badge">GRÁTIS</span>
-    </button>
+      <span class="btn-badge">PDF • GRÁTIS</span>
+    </a>
 
-    <!-- ⚠️ SUBSTITUA ABAIXO PELO SEU LINK HOTMART -->
-    <a href="https://pay.hotmart.com/Y105477103EI" class="btn btn-primary" target="_blank">
+    <!-- BOTÃO DO APP (HOTMART) -->
+    <!-- ⚠️ SUBSTITUA "https://pay.hotmart.com/Y105477103E" PELO SEU LINK REAL APÓS APROVAÇÃO -->
+    <a href="SEU_LINK_HOTMART_AQUI" class="btn btn-primary" target="_blank">
       <span class="btn-icon">📱</span>
       <span>
         <strong>Baixar PetCaixa</strong><br>
@@ -250,74 +84,32 @@
 
   </div>
 
-  <div id="ebook-section" class="ebook-card">
-    <h3>📥 Baixe o Guia Gratuito</h3>
-    <p>Receba no seu e-mail o PDF "5 Gastos que Todo Tutor Esquece" + dicas exclusivas de planejamento.</p>
-    
-    <form class="ebook-form" id="capture-form" onsubmit="enviarFormulario(event)">
-      <input type="text" id="nome" placeholder="Seu nome" required/>
-      <input type="email" id="email" placeholder="Seu melhor e-mail" required/>
-      <button type="submit" class="btn btn-gold" style="padding:12px;font-size:0.95rem">
-        📩 Enviar meu ebook agora
-      </button>
-    </form>
-    <p class="form-note">🔒 Seus dados estão seguros. Zero spam. Cancele quando quiser.</p>
+  <!-- SEÇÃO DE BENEFÍCIOS -->
+  <div class="ebook-card">
+    <h3>🎯 Por que usar o PetCaixa?</h3>
+    <p>O app que ajuda tutores responsáveis a planejarem os gastos com seus pets sem surpresas.</p>
   </div>
 
   <div class="features">
-    <div class="feature-item">
-      <span class="feature-icon">✅</span>
-      <span class="feature-text"><strong>Calcule custos reais</strong> por porte, espécie e idade do seu pet</span>
-    </div>
-    <div class="feature-item">
-      <span class="feature-icon">✅</span>
-      <span class="feature-text"><strong>Registre gastos</strong> de ração, vacinas, passeios e emergências</span>
-    </div>
-    <div class="feature-item">
-      <span class="feature-icon">✅</span>
-      <span class="feature-text"><strong>Acompanhe sua meta</strong> de fundo de emergência em tempo real</span>
-    </div>
-    <div class="feature-item">
-      <span class="feature-icon">✅</span>
-      <span class="feature-text"><strong>Receba alertas</strong> de vacinas e preventivos importantes</span>
-    </div>
+    <div class="feature-item"><span class="feature-icon">✅</span><span class="feature-text"><strong>Calcule custos reais</strong> por porte e espécie</span></div>
+    <div class="feature-item"><span class="feature-icon">✅</span><span class="feature-text"><strong>Registre gastos</strong> de ração, vacinas e emergências</span></div>
+    <div class="feature-item"><span class="feature-icon">✅</span><span class="feature-text"><strong>Acompanhe sua meta</strong> de fundo de emergência</span></div>
+    <div class="feature-item"><span class="feature-icon">✅</span><span class="feature-text"><strong>Receba alertas</strong> de vacinas importantes</span></div>
   </div>
 
+  <!-- REDES SOCIAIS -->
   <div class="social-links">
     <a href="https://instagram.com/petcaixa" class="social-link" target="_blank" title="Instagram">📸</a>
     <a href="https://tiktok.com/@petcaixa" class="social-link" target="_blank" title="TikTok">🎵</a>
-    <a href="https://youtube.com/@petcaixa" class="social-link" target="_blank" title="YouTube">▶️</a>
   </div>
 
+  <!-- RODAPÉ -->
   <div class="footer">
-    <p>🐾 PetCaixa © 2025 • App gratuito de educação financeira para tutores</p>
+    <p>🐾 PetCaixa © 2025 • App de educação financeira para tutores</p>
     <p style="margin-top:6px">
-      <a href="#">Termos de Uso</a> • <a href="#">Política de Privacidade</a>
+      <a href="#">Termos</a> • <a href="#">Privacidade</a>
     </p>
   </div>
 
-  <script>
-    function scrollToEbook() {
-      document.getElementById('ebook-section').scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center' 
-      });
-      document.getElementById('email').focus();
-    }
-
-    function enviarFormulario(e) {
-      e.preventDefault();
-      document.getElementById('success-msg').style.display = 'block';
-      document.getElementById('capture-form').reset();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    document.getElementById('capture-form').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && e.target.tagName !== 'BUTTON') {
-        e.preventDefault();
-        enviarFormulario(e);
-      }
-    });
-  </script>
 </body>
 </html>
